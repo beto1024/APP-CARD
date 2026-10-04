@@ -1,0 +1,4 @@
+import type {DueCard,Rating} from '../types'
+const DAY=86400000
+export function schedule(card:DueCard,rating:Rating){let repetitions=card.repetitions,lapses=card.lapses,ease=Number(card.ease_factor||2.5),interval=Number(card.interval_days||0);if(rating==='AGAIN'){repetitions=0;lapses++;ease=Math.max(1.3,ease-.2);interval=1/1440}else{repetitions++;if(rating==='HARD'){ease=Math.max(1.3,ease-.15);interval=Math.max(1,interval*1.2)}else if(rating==='GOOD'){interval=repetitions===1?1:repetitions===2?6:Math.max(1,interval*ease)}else{ease+=.15;interval=repetitions===1?4:Math.max(4,interval*ease*1.3)}}return{repetitions,lapses,ease_factor:Number(ease.toFixed(2)),interval_days:Number(interval.toFixed(4)),due_at:new Date(Date.now()+interval*DAY).toISOString(),last_reviewed_at:new Date().toISOString()}}
+
